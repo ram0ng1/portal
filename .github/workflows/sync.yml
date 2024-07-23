@@ -30,7 +30,15 @@ jobs:
           git init
           git remote add origin https://github.com/ram0ng1/portal.git
           git fetch origin
-          git reset --hard origin/main || echo "Failed to reset to origin/main"
+
+          # Verifique se o branch main existe localmente
+          git branch -a
+          git branch
+
+          # Se o branch main não existir, crie-o a partir de main do remoto
+          git checkout -b main origin/main || git checkout -b main
+
+          # Confirme o status e faça o commit e push
           git status
           git add .
           git status
