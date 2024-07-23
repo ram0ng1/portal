@@ -29,13 +29,16 @@ jobs:
           cd portal
           git init
           git remote add origin https://github.com/ram0ng1/portal.git
-          git fetch origin
 
           # Configurar identidade do autor
-          git config user.name "ram0ng1"
-          git config user.email "ramon@ramonguilherme.com.br"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Adicionar e configurar o repositório remoto com o token
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/ram0ng1/portal.git
 
           # Verifique se o branch main existe localmente
+          git fetch origin
           git branch -a
           git branch
 
