@@ -1,0 +1,46 @@
+name: Sync Portal
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Executa diariamente à meia-noite
+  workflow_dispatch:
+
+jobs:
+  sync-portal:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the Ghost repo
+        uses: actions/checkout@v3
+        with:
+          repository: TryGhost/Ghost
+          path: Ghost
+
+      - name: Filter subdirectory
+        run: |
+          cd Ghost
+          git filter-repo --subdirectory-filter apps/portal
+          git remote add portal https://github.com/ram0ng1/portal.git
+          git push -f portal main
+
+      - name: Checkout the portal repo
+        uses: actions/checkout@v3
+        with:
+          repository: ram0ng1/portal
+          path: portal
+
+      - name: Copy filtered content
+        run: |
+          rsync -av --delete Ghost/ portal/
+          cd portal
+          git add .
+          git commit -m "Sync with Ghost repository" || echo "No changes to commit"
+          git push
+
+      - name: Modify PoweredBy.js
+        run: |
+          sed -i 's/Powered by Ghost/Powered by GhostCustom/' portal/src/components/common/PoweredBy.js
+          cd portal
+          git add src/components/common/PoweredBy.js
+          git commit -m "Remove Powered by Ghost" || echo "No changes to commit"
+          git push
