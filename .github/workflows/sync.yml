@@ -31,6 +31,10 @@ jobs:
           git remote add origin https://github.com/ram0ng1/portal.git
           git fetch origin
 
+          # Configurar identidade do autor
+          git config user.name "Ramon Guilherme"
+          git config user.email "ramon@ramonguilherme.com.br"
+
           # Verifique se o branch main existe localmente
           git branch -a
           git branch
