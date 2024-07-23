@@ -21,6 +21,7 @@ jobs:
         with:
           repository: ram0ng1/portal
           path: portal
+          token: ${{ secrets.GITHUB_TOKEN }}  # Adicione o token aqui
 
       - name: Sync portal directory
         run: |
@@ -28,11 +29,13 @@ jobs:
           cd portal
           git init
           git remote add origin https://github.com/ram0ng1/portal.git
+          git fetch origin
+          git reset --hard origin/main
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add .
           git commit -m "Sync with Ghost repository" || echo "No changes to commit"
-          git push origin main
+          git push origin main || echo "Failed to push changes"
 
       - name: Modify PoweredBy.js
         run: |
@@ -40,4 +43,4 @@ jobs:
           sed -i 's/Powered by Ghost/Powered by GhostCustom/' src/components/common/PoweredBy.js
           git add src/components/common/PoweredBy.js
           git commit -m "Remove Powered by Ghost" || echo "No changes to commit"
-          git push origin main
+          git push origin main || echo "Failed to push changes"
