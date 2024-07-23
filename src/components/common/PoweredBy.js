@@ -6,7 +6,7 @@ export default class PoweredBy extends React.Component {
     static contextType = AppContext;
 
     render() {
-        // Note: please do not wrap "Powered by Ghost" in the translation function, as we don't
+        // Note: please do not wrap "Powered by GhostCustom" in the translation function, as we don't
         // want it to be translated
         /* eslint-disable i18next/no-literal-string */
         return (
@@ -14,7 +14,7 @@ export default class PoweredBy extends React.Component {
                 window.open('https://ghost.org', '_blank');
             }}>
                 <GhostLogo />
-                Powered by Ghost
+                Powered by GhostCustom
             </a>
         );
         /* eslint-enable i18next/no-literal-string */
