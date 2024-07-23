@@ -32,7 +32,7 @@ jobs:
           git fetch origin
 
           # Configurar identidade do autor
-          git config user.name "Ramon Guilherme"
+          git config user.name "ram0ng1"
           git config user.email "ramon@ramonguilherme.com.br"
 
           # Verifique se o branch main existe localmente
