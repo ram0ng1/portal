@@ -30,10 +30,10 @@ jobs:
           git init
           git remote add origin https://github.com/ram0ng1/portal.git
           git fetch origin
-          git reset --hard origin/main
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git reset --hard origin/main || echo "Failed to reset to origin/main"
+          git status
           git add .
+          git status
           git commit -m "Sync with Ghost repository" || echo "No changes to commit"
           git push origin main || echo "Failed to push changes"
 
@@ -41,6 +41,7 @@ jobs:
         run: |
           cd portal
           sed -i 's/Powered by Ghost/Powered by GhostCustom/' src/components/common/PoweredBy.js
+          git status
           git add src/components/common/PoweredBy.js
           git commit -m "Remove Powered by Ghost" || echo "No changes to commit"
           git push origin main || echo "Failed to push changes"
