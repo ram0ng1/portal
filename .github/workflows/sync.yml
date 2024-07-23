@@ -16,22 +16,15 @@ jobs:
           repository: TryGhost/Ghost
           path: Ghost
 
-      - name: Filter subdirectory
-        run: |
-          cd Ghost
-          git filter-repo --subdirectory-filter apps/portal
-          git remote add portal https://github.com/ram0ng1/portal.git
-          git push -f portal main
-
       - name: Checkout the portal repo
         uses: actions/checkout@v3
         with:
           repository: ram0ng1/portal
           path: portal
 
-      - name: Copy filtered content
+      - name: Sync portal directory
         run: |
-          rsync -av --delete Ghost/ portal/
+          rsync -av --delete Ghost/apps/portal/ portal/
           cd portal
           git add .
           git commit -m "Sync with Ghost repository" || echo "No changes to commit"
