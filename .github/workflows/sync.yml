@@ -1,4 +1,4 @@
-name: Sync Portal
+name: Sync Portal and Create Release
 
 on:
   schedule:
@@ -53,8 +53,20 @@ jobs:
       - name: Modify PoweredBy.js
         run: |
           cd portal
-          sed -i 's/Powered by Ghost/Powered by GhostCustom/' src/components/common/PoweredBy.js
+          sed -i '/return (/,+6d' src/components/common/PoweredBy.js
           git status
           git add src/components/common/PoweredBy.js
-          git commit -m "Remove Powered by Ghost" || echo "No changes to commit"
+          git commit -m "Remove Powered by Ghost section" || echo "No changes to commit"
           git push origin main || echo "Failed to push changes"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          release_name: "Release ${{ github.run_number }}"
+          body: "Automated release with the latest changes."
+          draft: false
+          prerelease: false
