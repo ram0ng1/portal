@@ -53,7 +53,7 @@ jobs:
       - name: Modify PoweredBy.js
         run: |
           cd portal
-          sed -i '/return (/,+9d' src/components/common/PoweredBy.js
+          sed -i '/return (/,+8d' src/components/common/PoweredBy.js
           git status
           git add src/components/common/PoweredBy.js
           git commit -m "Remove a seção Powered by Ghost" || echo "No changes to commit"
