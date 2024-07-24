@@ -47,16 +47,17 @@ jobs:
           git status
           git add .
           git status
-          git commit -m "Sync with Ghost repository" || echo "No changes to commit"
+          git commit -m "Sincronizando com o repositório Ghost" || echo "Nenhuma alteração"
           git push origin main || echo "Failed to push changes"
 
       - name: Modify PoweredBy.js
         run: |
           cd portal
           sed -i '/return (/,+6d' src/components/common/PoweredBy.js
+          sed -i '/GhostLogo/,+7d' src/components/common/PoweredBy.js  # Remove the entire block with extra paranthesis
           git status
           git add src/components/common/PoweredBy.js
-          git commit -m "Remove Powered by Ghost section" || echo "No changes to commit"
+          git commit -m "Remove a seção Powered by Ghost" || echo "No changes to commit"
           git push origin main || echo "Failed to push changes"
 
       - name: Create Release
@@ -67,6 +68,6 @@ jobs:
         with:
           tag_name: v1.0.${{ github.run_number }}
           release_name: "Release ${{ github.run_number }}"
-          body: "Automated release with the latest changes."
+          body: "Release automatizada com as alterações mais recentes."
           draft: false
           prerelease: false
