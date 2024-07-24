@@ -21,7 +21,7 @@ jobs:
         with:
           repository: ram0ng1/portal
           path: portal
-          token: ${{ secrets.GITHUB_TOKEN }}  # Adicione o token aqui
+          token: ${{ secrets.GITHUB_TOKEN }}  # Usando o token
 
       - name: Sync portal directory
         run: |
@@ -31,19 +31,16 @@ jobs:
           git remote add origin https://github.com/ram0ng1/portal.git
 
           # Configurar identidade do autor
-          git config user.name "ram0ng1"
-          git config user.email "ramon@ramonguilherme.com.br"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
           # Adicionar e configurar o repositório remoto com o token
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/ram0ng1/portal.git
 
-          # Verifique se o branch main existe localmente
+          # Verificar se o branch main existe e fazer pull
           git fetch origin
-          git branch -a
-          git branch
-
-          # Se o branch main não existir, crie-o a partir de main do remoto
           git checkout -b main origin/main || git checkout -b main
+          git pull origin main
 
           # Confirme o status e faça o commit e push
           git status
