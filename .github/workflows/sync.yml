@@ -40,6 +40,7 @@ jobs:
           # Verificar se o branch main existe e fazer pull
           git fetch origin
           git checkout -b main origin/main || git checkout -b main
+          git clean -fd # Remove arquivos não rastreados
           git pull origin main
 
           # Confirme o status e faça o commit e push
