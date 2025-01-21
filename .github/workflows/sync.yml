@@ -1,6 +1,9 @@
 name: Sync Portal and Create Release
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     - cron: '0 0 * * *' # Executa diariamente à meia-noite
   workflow_dispatch:
@@ -23,7 +26,16 @@ jobs:
           path: portal
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Get last commit message
+        id: commit_message
+        run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+
+      - name: Check commit message
+        if: contains(env.COMMIT_MESSAGE, 'Sync Repo')
+        run: echo "Commit message contains 'Sync Repo', proceeding with workflow..."
+
       - name: Sync portal directory
+        if: contains(env.COMMIT_MESSAGE, 'Sync Repo')
         run: |
           rsync -av --delete Ghost/apps/portal/ portal/
           cd portal
@@ -51,6 +63,7 @@ jobs:
           git push origin main || echo "Failed to push changes"
 
       - name: Modify PoweredBy.js
+        if: contains(env.COMMIT_MESSAGE, 'Sync Repo')
         run: |
           cd portal
           sed -i '/return (/,+8d' src/components/common/PoweredBy.js
@@ -60,12 +73,14 @@ jobs:
           git push origin main || echo "Failed to push changes"
 
       - name: Build project
+        if: contains(env.COMMIT_MESSAGE, 'Sync Repo')
         run: |
           cd portal
           yarn install
           yarn build
 
       - name: List and delete old releases
+        if: contains(env.COMMIT_MESSAGE, 'Sync Repo')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -74,11 +89,8 @@ jobs:
             curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/ram0ng1/portal/releases/$release_id
           done
 
-      - name: Get last commit message
-        id: vars
-        run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
-
       - name: Create a new release
+        if: contains(env.COMMIT_MESSAGE, 'Sync Repo')
         uses: actions/create-release@v1
         with:
           tag_name: ${{ github.sha }}
