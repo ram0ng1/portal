@@ -1,6 +1,7 @@
 # Portal
 
 [![npm version](https://badge.fury.io/js/%40tryghost%2Fportal.svg)](https://badge.fury.io/js/%40tryghost%2Fportal)
+[![Sync Portal and Create Release](https://github.com/ram0ng1/portal/actions/workflows/sync.yml/badge.svg)](https://github.com/ram0ng1/portal/actions/workflows/sync.yml)
 
 [Drop-in script](https://ghost.org/help/setting-up-portal/) to make the bulk of Ghost membership features work on any theme.
 
