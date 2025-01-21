@@ -21,7 +21,7 @@ jobs:
         with:
           repository: ram0ng1/portal
           path: portal
-          token: ${{ secrets.GITHUB_TOKEN }}  # Usando o token
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Sync portal directory
         run: |
@@ -43,7 +43,7 @@ jobs:
           git clean -fd # Remove arquivos não rastreados
           git pull origin main
 
-          # Confirme o status e faça o commit e push
+          # Confirmar o status e fazer o commit e push
           git status
           git add .
           git status
@@ -58,3 +58,33 @@ jobs:
           git add src/components/common/PoweredBy.js
           git commit -m "Remove a seção Powered by Ghost" || echo "No changes to commit"
           git push origin main || echo "Failed to push changes"
+
+      - name: Build project
+        run: |
+          cd portal
+          yarn install
+          yarn build
+
+      - name: List and delete old releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          releases=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/ram0ng1/portal/releases | jq -r '.[].id')
+          for release_id in $releases; do
+            curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/ram0ng1/portal/releases/$release_id
+          done
+
+      - name: Get last commit message
+        id: vars
+        run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+
+      - name: Create a new release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.sha }}
+          release_name: Release ${{ github.sha }}
+          body: |
+            Release based on the commit: ${{ env.COMMIT_MESSAGE }}
+          draft: false
+          prerelease: false
+          files: umd/portal.min.js
