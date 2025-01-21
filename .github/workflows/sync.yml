@@ -73,13 +73,6 @@ jobs:
           git commit -m "Remove a seção Powered by Ghost" || echo "No changes to commit"
           git push origin main || echo "Failed to push changes"
 
-      - name: Build project
-        if: contains(env.COMMIT_MESSAGE, 'Sync Repo')
-        run: |
-          cd portal
-          yarn install
-          yarn build
-
       - name: List and delete old releases
         if: contains(env.COMMIT_MESSAGE, 'Sync Repo')
         env:
