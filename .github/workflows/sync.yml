@@ -88,10 +88,8 @@ jobs:
         if: contains(env.COMMIT_MESSAGE, 'Sync Repo')
         uses: actions/create-release@v1
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ github.sha }}
           release_name: Release ${{ github.sha }}
           body: |
-            Release based on the commit: ${{ env.COMMIT_MESSAGE }}
-          draft: false
-          prerelease: false
-          files: portal/umd/portal.min.js
+            Release based on the commit: ${{ env.COMMIT
