@@ -27,8 +27,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get last commit message
-        id: commit_message
-        run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+        run: |
+          cd portal
+          echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
 
       - name: Check commit message
         if: contains(env.COMMIT_MESSAGE, 'Sync Repo')
@@ -84,6 +85,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          cd portal
           releases=$(curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/ram0ng1/portal/releases | jq -r '.[].id')
           for release_id in $releases; do
             curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/ram0ng1/portal/releases/$release_id
@@ -99,4 +101,4 @@ jobs:
             Release based on the commit: ${{ env.COMMIT_MESSAGE }}
           draft: false
           prerelease: false
-          files: umd/portal.min.js
+          files: portal/umd/portal.min.js
