@@ -92,4 +92,4 @@ jobs:
           tag_name: ${{ github.sha }}
           release_name: Release ${{ github.sha }}
           body: |
-            Release based on the commit: ${{ env.COMMIT
+            Release based on the commit: ${{ env.COMMIT }}
